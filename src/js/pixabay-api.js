@@ -3,8 +3,10 @@ import axios from 'axios';
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
+import { createGallery, clearGallery, showLoader, hideLoader } from './render-functions';
 
 const form = document.querySelector('form');
+const loader = document.querySelector(".loader");
 
 const API_KEY = '49649405-8aeb588384e19e05040c9b75c';
 axios.defaults.baseURL = 'https://pixabay.com/api/';
@@ -23,7 +25,9 @@ function handleSubmit(event) {
 }
 
 export function getImagesByQuery(query) {
-    
+
+    showLoader();
+
     axios({
         params: {
             key: API_KEY,
@@ -34,17 +38,20 @@ export function getImagesByQuery(query) {
         }
     })
         .then((data) => {
-
             if (data.data.hits.length === 0) {
                 throw new Error('Sorry, there are no images matching your search query. Please try again!');
             }
-            console.log(data);
-            
+            createGallery(data.data.hits);
         }
         )
-        .catch(error => console.log(iziToast.error({
+        .catch(error => iziToast.error({
                 message: error.message,
                 position: "topRight",
-            }))
+            }),
+            clearGallery()
+        )
+        .finally(
+            hideLoader()
         );
+
 };
