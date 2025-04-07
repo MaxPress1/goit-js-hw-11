@@ -3,6 +3,12 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 
 const galleryList = document.querySelector('.gallery');
 
+const lightbox = new SimpleLightbox(".gallery a", {
+    captionsData: "alt",
+    captionDelay: 250,
+    overlayOpacity: 0.8,
+});
+
 export function createGallery(images) {
     const markup = images.map(image => `
     <li>
@@ -19,12 +25,6 @@ export function createGallery(images) {
     `).join("");
 
     galleryList.innerHTML = markup;
-
-    const lightbox = new SimpleLightbox(".gallery a", {
-        captionsData: "alt",
-        captionDelay: 250,
-        overlayOpacity: 0.8,
-    });
 
     lightbox.refresh();
 };
